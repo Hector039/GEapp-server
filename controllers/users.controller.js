@@ -4,6 +4,7 @@ import CustomError from "../tools/customErrors/customError.js";
 import TErrors from "../tools/customErrors/enum.js";
 
 const RECOMMENDED_DAILY_STEPS = 5000;
+const HOURS_TO_COUNT_STEPS = 2;
 
 export default class UsersController {
 	constructor(repo) {
@@ -30,6 +31,7 @@ export default class UsersController {
 				token,
 				totalSteps,
 				RECOMMENDED_DAILY_STEPS,
+				HOURS_TO_COUNT_STEPS,
 				org,
 			});
 		} catch (error) {
@@ -116,7 +118,7 @@ export default class UsersController {
 			}
 			const avatarPath = `http://${process.env.LOCAL_IP}:${process.env.PORT}/${avatar.filename}`;
 			await this.usersRepo.updateUserField(uid, "avatar", avatarPath);
-			res.status(200).send({ avatarPath });
+			res.status(200).send(avatarPath);
 		} catch (error) {
 			next(error);
 		}
@@ -141,7 +143,7 @@ export default class UsersController {
 	};
 
 	updateUserTotalSteps = async (req, res, next) => {
-		const { uid, steps } = req.params;
+		const { uid, steps } = req.body;
 		try {
 			if (!uid || !steps) {
 				CustomError.createError({
@@ -239,6 +241,23 @@ export default class UsersController {
 				});
 			}
 			res.status(200).send(newCommunityUsers);
+		} catch (error) {
+			next(error);
+		}
+	};
+
+	getUserTotalSteps = async (req, res, next) => {
+		const { uid } = req.params;
+		try {
+			const user = await this.usersRepo.getUser(uid);
+			if (user === null) {
+				CustomError.createError({
+					message: `Usuario con ID ${uid} no encontrado`,
+					code: TErrors.INVALID_TYPES,
+					statusCode: 404,
+				});
+			}
+			res.status(200).send({ totalSteps: user.totalSteps });
 		} catch (error) {
 			next(error);
 		}

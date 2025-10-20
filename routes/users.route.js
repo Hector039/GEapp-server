@@ -62,15 +62,20 @@ router.put(
 	usersController.updateUserPassword
 );
 router.put(
-	"/updateusertotalsteps/:uid/:steps",
+	"/updateusertotalsteps",
 	userPassJwt(),
-	handlePolicies(["PUBLIC"]),
+	handlePolicies(["USER"]),
 	usersController.updateUserTotalSteps
 );
 router.get(
 	"/getnewuserscommunity",
 	handlePolicies(["PUBLIC"]),
 	usersController.getNewUsersCommunity
+);
+router.get(
+	"/getusertotalsteps/:uid",
+	handlePolicies(["USER"]),
+	usersController.getUserTotalSteps
 );
 
 export default router;
