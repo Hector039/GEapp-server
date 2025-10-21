@@ -77,5 +77,20 @@ router.get(
 	handlePolicies(["USER"]),
 	usersController.getUserTotalSteps
 );
+router.get(
+	"/gettopusers",
+	handlePolicies(["PUBLIC"]),
+	usersController.getTopUsers
+);
+router.get(
+	"/getcommunitysteps",
+	handlePolicies(["PUBLIC"]),
+	usersController.getCommunitySteps
+);
+router.get(
+	"/getorgusers/:uid",
+	handlePolicies(["USER"]),
+	usersController.getOrgUsers
+);
 
 export default router;
