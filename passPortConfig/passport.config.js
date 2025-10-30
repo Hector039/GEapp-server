@@ -1,4 +1,7 @@
-import { usersRepository } from "../repository/index.repository.js";
+import {
+	usersRepository,
+	orgsEventsRepository,
+} from "../repository/index.repository.js";
 import passport from "passport";
 import local from "passport-local";
 import { createHash, isValidPass } from "../tools/utils.js";
@@ -13,8 +16,17 @@ const initializePassport = () => {
 		new localStrategy(
 			{ passReqToCallback: true, usernameField: "email" },
 			async (req, username, password, done) => {
-				const { email, org } = req.body;
+				const { email } = req.body;
+
 				try {
+					const userOpenOrgEvent = await orgsEventsRepository.getUserOpenOrgEvent(
+						email
+					);
+					if (userOpenOrgEvent.length === 0) {
+						return done(null, false, {
+							messages: "No se encontró ningún evento abierto de la Organización.",
+						});
+					}
 					const userByEmail = await usersRepository.getUser(email);
 					if (userByEmail)
 						return done(null, false, { messages: "El Email ya existe." });
@@ -22,7 +34,7 @@ const initializePassport = () => {
 					const newUser = await usersRepository.saveUser({
 						email,
 						password: createHash(password),
-						org: org === "" ? null : org,
+						orgEventId: userOpenOrgEvent[0]._id,
 					});
 
 					//await mailer({ mail: email, name: firstName }, `Bienvenido!`)
@@ -41,8 +53,15 @@ const initializePassport = () => {
 			async (email, password, done) => {
 				try {
 					const user = await usersRepository.getUser(email);
+
 					if (user === null)
 						return done(null, false, { messages: "El Usuario no existe." });
+
+					if (!user.orgEventId.projectId || !user.orgEventId)
+						return done(null, false, {
+							messages: "El evento o el proyecto está cerrado.",
+						});
+
 					if (user.status === false)
 						return done(null, false, {
 							messages: "Usuario no verificado. Revisa tu email y actívalo",

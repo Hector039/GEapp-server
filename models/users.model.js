@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const userCollection = "users";
 
 const userSchema = new mongoose.Schema({
-	email: { type: String, require: true, unique: true },
+	email: { type: String, required: true, unique: true },
 	password: {
 		type: String,
 		require: true,
@@ -11,7 +11,11 @@ const userSchema = new mongoose.Schema({
 		min: [6, "6 caracteres mínimo"],
 	},
 	idGoogle: { type: String, default: null },
-	org: { type: String, default: null },
+	orgEventId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "orgEvents",
+		required: true,
+	},
 	lastLogin: { type: Date, default: Date.now },
 	registerDate: { type: Date, default: Date.now },
 	status: { type: Boolean, default: true },

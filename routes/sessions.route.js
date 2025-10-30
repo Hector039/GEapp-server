@@ -13,9 +13,15 @@ router.post(
 );
 
 router.get(
-	"/getusersession/:uid/:date",
+	"/getuserinforewards/:uid/:date",
 	handlePolicies(["USER"]),
-	sessionsController.getUserSession
+	sessionsController.getUserInfoRewards
+);
+
+router.get(
+	"/getdatachart/:uid/:filter",
+	handlePolicies(["USER"]),
+	sessionsController.getDataChart
 );
 
 export default router;

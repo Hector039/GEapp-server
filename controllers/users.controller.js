@@ -2,9 +2,12 @@ import { generateToken, createHash, isValidPass } from "../tools/utils.js";
 //import mailer from "../tools/mailer.js";
 import CustomError from "../tools/customErrors/customError.js";
 import TErrors from "../tools/customErrors/enum.js";
-
-const RECOMMENDED_DAILY_STEPS = 5000;
-const HOURS_TO_COUNT_STEPS = 2;
+import {
+	RECOMMENDED_DAILY_STEPS,
+	HOURS_TO_COUNT_STEPS,
+	SESSION_REWARD,
+	STREAK_REWARD,
+} from "../constants/constants.js";
 
 export default class UsersController {
 	constructor(repo) {
@@ -15,24 +18,22 @@ export default class UsersController {
 		try {
 			const user = req.user;
 			const email = user.email;
-			const lastLogin = user.lastLogin;
 			const avatar = user.avatar;
 			const id = user._id;
-			const status = user.status;
 			const totalSteps = user.totalSteps;
-			const org = user.org;
+			const orgEvent = user.orgEventId;
 			let token = generateToken({ id });
 			res.status(200).send({
 				id,
-				status,
 				email,
-				lastLogin,
 				avatar,
-				token,
 				totalSteps,
+				orgEvent,
+				token,
 				RECOMMENDED_DAILY_STEPS,
 				HOURS_TO_COUNT_STEPS,
-				org,
+				SESSION_REWARD,
+				STREAK_REWARD,
 			});
 		} catch (error) {
 			next(error);

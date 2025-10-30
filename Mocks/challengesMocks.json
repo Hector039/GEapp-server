@@ -1,0 +1,34 @@
+{
+    "triviaChallenges": [
+        {
+            "title": "Flora Argentina",
+            "descr": "Demuestra tu conocimiento sobre la naturaleza argentina respondiendo correctamente",
+            "type": "trivia",
+            "icon": "http://192.168.100.48:8000/68ec3a4064f8f70353b38de1_1760837946853_.jpeg",
+            "reward": 100,
+            "question": "¿Cuál es la flor nacional de Argentina?",
+            "options": [
+                "El ceibo",
+                "La rosa",
+                "El jacarandá",
+                "La orquídea"
+            ],
+            "correctOptionIndex": 0
+        },
+        {
+            "title": "Fauna Patagónica",
+            "descr": "Pon a prueba tus conocimientos sobre los animales de la Patagonia argentina",
+            "type": "trivia",
+            "icon": "http://192.168.100.48:8000/68ec3a4064f8f70353b38de1_1760837946853_.jpeg",
+            "reward": 100,
+            "question": "¿Qué animal es típico de la Patagonia argentina y está en peligro de extinción?",
+            "options": [
+                "El puma",
+                "El huemul",
+                "El guanaco",
+                "El ñandú"
+            ],
+            "correctOptionIndex": 1
+        }
+    ]
+}

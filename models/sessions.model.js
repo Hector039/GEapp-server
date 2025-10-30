@@ -6,9 +6,10 @@ const sessionSchema = new mongoose.Schema({
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "users",
+		required: true,
 	},
 	steps: { type: Number, default: 0 },
-	date: { type: Date, default: Date.now },
+	date: { type: Date, required: true },
 });
 
 const sessionsModel = mongoose.model(sessionCollection, sessionSchema);
