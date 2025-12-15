@@ -7,12 +7,15 @@ export default class UsersRepository {
 
 	getUser = async (id) => {
 		if (mongoose.Types.ObjectId.isValid(id)) {
-			let user = await this.usersModel.findOne({ _id: id }).populate({
-				path: "orgEventId",
-				populate: {
-					path: "projectId",
-				},
-			});
+			let user = await this.usersModel
+				.findOne({ _id: id })
+				.populate({
+					path: "orgEventId",
+					populate: {
+						path: "projectId",
+					},
+				})
+				.lean();
 			return user;
 		}
 		let user = await this.usersModel
@@ -24,7 +27,8 @@ export default class UsersRepository {
 				populate: {
 					path: "projectId",
 				},
-			});
+			})
+			.lean();
 		return user;
 	};
 

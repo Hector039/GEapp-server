@@ -17,23 +17,31 @@ export default class UsersController {
 	userSigninOrLogin = async (req, res, next) => {
 		try {
 			const user = req.user;
-			const email = user.email;
-			const avatar = user.avatar;
-			const id = user._id;
-			const totalSteps = user.totalSteps;
-			const orgEvent = user.orgEventId;
-			let token = generateToken({ id });
+			const {
+				orgEventId: { projectId, ...orgEvent },
+				...userData
+			} = user;
+
+			// console.log("project in controller: ", projectId);
+			// console.log("orgEvent in controller: ", orgEvent);
+			// console.log("user in controller: ", userData);
+
+			let token = generateToken({ id: userData._id });
 			res.status(200).send({
-				id,
-				email,
-				avatar,
-				totalSteps,
+				user: {
+					id: userData._id,
+					email: userData.email,
+					avatar: userData.avatar,
+					totalSteps: userData.totalSteps,
+					registerDate: userData.registerDate,
+					token,
+					RECOMMENDED_DAILY_STEPS,
+					HOURS_TO_COUNT_STEPS,
+					SESSION_REWARD,
+					STREAK_REWARD,
+				},
 				orgEvent,
-				token,
-				RECOMMENDED_DAILY_STEPS,
-				HOURS_TO_COUNT_STEPS,
-				SESSION_REWARD,
-				STREAK_REWARD,
+				project: projectId,
 			});
 		} catch (error) {
 			next(error);

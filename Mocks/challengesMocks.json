@@ -1,34 +1,170 @@
-{
-    "triviaChallenges": [
-        {
-            "title": "Flora Argentina",
-            "descr": "Demuestra tu conocimiento sobre la naturaleza argentina respondiendo correctamente",
-            "type": "trivia",
-            "icon": "http://192.168.100.48:8000/68ec3a4064f8f70353b38de1_1760837946853_.jpeg",
-            "reward": 100,
-            "question": "¿Cuál es la flor nacional de Argentina?",
-            "options": [
-                "El ceibo",
-                "La rosa",
-                "El jacarandá",
-                "La orquídea"
-            ],
-            "correctOptionIndex": 0
-        },
-        {
-            "title": "Fauna Patagónica",
-            "descr": "Pon a prueba tus conocimientos sobre los animales de la Patagonia argentina",
-            "type": "trivia",
-            "icon": "http://192.168.100.48:8000/68ec3a4064f8f70353b38de1_1760837946853_.jpeg",
-            "reward": 100,
-            "question": "¿Qué animal es típico de la Patagonia argentina y está en peligro de extinción?",
-            "options": [
-                "El puma",
-                "El huemul",
-                "El guanaco",
-                "El ñandú"
-            ],
-            "correctOptionIndex": 1
-        }
-    ]
-}
+[
+    {
+        "title": "Plantas Nativas",
+        "descr": "Demuestra tu conocimiento sobre especies autóctonas argentinas",
+        "reward": 120,
+        "question": "¿Cuál de estas es una planta nativa característica del Bosque Chaqueño?",
+        "options": [
+            "Palo borracho rosado",
+            "Pino elliottii",
+            "Eucalipto",
+            "Lavanda"
+        ],
+        "correctOptionIndex": 0,
+        "icon": "http://192.168.100.48:8000/floraIcon1.png"
+    },
+    {
+        "title": "Plantas Nativas",
+        "descr": "Demuestra tu conocimiento sobre especies autóctonas argentinas",
+        "reward": 150,
+        "question": "¿Qué bioma argentino es conocido por su enorme diversidad de cactus?",
+        "options": [
+            "Yungas",
+            "Pampa húmeda",
+            "Monte",
+            "Delta del Paraná"
+        ],
+        "correctOptionIndex": 2,
+        "icon": "http://192.168.100.48:8000/floraIcon2.png"
+    },
+    {
+        "title": "Flora Argentina",
+        "descr": "Poné a prueba tu conocimiento sobre la flora nativa",
+        "reward": 100,
+        "question": "¿Cuál es la flor nacional de Argentina?",
+        "options": [
+            "El ceibo",
+            "La rosa",
+            "El jacarandá",
+            "La orquídea"
+        ],
+        "correctOptionIndex": 0,
+        "icon": "http://192.168.100.48:8000/floraIcon3.png"
+    },
+    {
+        "title": "Ecosistemas",
+        "descr": "Probá cuánto sabés sobre los ambientes naturales del país",
+        "reward": 130,
+        "question": "¿Qué característica distingue al ecosistema del pastizal pampeano?",
+        "options": [
+            "Alta presencia de palmeras",
+            "Suelos extremadamente secos",
+            "Grandes extensiones de herbáceas",
+            "Bosques tropicales densos"
+        ],
+        "correctOptionIndex": 2,
+        "icon": "http://192.168.100.48:8000/floraIcon3.png"
+    },
+    {
+        "title": "Plantas Nativas",
+        "descr": "Demuestra tu conocimiento sobre especies autóctonas",
+        "reward": 110,
+        "question": "¿Cuál de estas plantas es clave para atraer polinizadores en Argentina?",
+        "options": [
+            "Timbó",
+            "Lantana cámara",
+            "Ceibo",
+            "Pasto bermuda"
+        ],
+        "correctOptionIndex": 3,
+        "icon": "http://192.168.100.48:8000/floraIcon2.png"
+    },
+    {
+        "title": "Educación Ambiental",
+        "descr": "Aprendé sobre sustentabilidad y territorio",
+        "reward": 140,
+        "question": "¿Qué concepto promueve el uso responsable de recursos evitando el agotamiento?",
+        "options": [
+            "Sostenibilidad",
+            "Explotación intensiva",
+            "Desmonte",
+            "Urbanización extensiva"
+        ],
+        "correctOptionIndex": 0,
+        "icon": "http://192.168.100.48:8000/floraIcon1.png"
+    },
+    {
+        "title": "Plantas Nativas",
+        "descr": "Demuestra tu conocimiento sobre flora autóctona",
+        "reward": 160,
+        "question": "¿Cuál es un árbol nativo emblemático de las Yungas?",
+        "options": [
+            "Arrayán",
+            "Tipa",
+            "Espinillo",
+            "Algarrobo"
+        ],
+        "correctOptionIndex": 1,
+        "icon": "http://192.168.100.48:8000/floraIcon3.png"
+    },
+    {
+        "title": "Ecosistemas",
+        "descr": "Probá cuánto sabés sobre los ambientes argentinos",
+        "reward": 150,
+        "question": "¿Qué ecosistema del país es considerado uno de los más biodiversos?",
+        "options": [
+            "Monte",
+            "Puna",
+            "Yungas",
+            "Pampa"
+        ],
+        "correctOptionIndex": 2,
+        "icon": "http://192.168.100.48:8000/faunaIcon3.png"
+    },
+    {
+        "title": "Flora Argentina",
+        "descr": "Poné a prueba tu conocimiento sobre flora nativa",
+        "reward": 110,
+        "question": "¿Qué planta nativa se usa frecuentemente para restauración ambiental?",
+        "options": [
+            "Sombra de toro",
+            "Pino caribe",
+            "Eucalipto",
+            "Olmo"
+        ],
+        "correctOptionIndex": 0,
+        "icon": "http://192.168.100.48:8000/faunaIcon2.png"
+    },
+    {
+        "title": "Plantas y Polinizadores",
+        "descr": "Aprendé sobre relaciones ecológicas",
+        "reward": 120,
+        "question": "¿Cuál de estas plantas ayuda a sostener poblaciones de aves frugívoras?",
+        "options": [
+            "Ceibo",
+            "Tala",
+            "Jacarandá",
+            "Cardón"
+        ],
+        "correctOptionIndex": 1,
+        "icon": "http://192.168.100.48:8000/faunaIcon1.png"
+    },
+    {
+        "title": "Educación Ambiental",
+        "descr": "Demuestra tu conocimiento sobre sustentabilidad",
+        "reward": 130,
+        "question": "¿Qué práctica favorece la biodiversidad urbana?",
+        "options": [
+            "Jardines con plantas nativas",
+            "Pavimentación total",
+            "Poda excesiva",
+            "Eliminación de arbustos"
+        ],
+        "correctOptionIndex": 0,
+        "icon": "http://192.168.100.48:8000/faunaIcon4.png"
+    },
+    {
+        "title": "Ecosistemas",
+        "descr": "Probá cuánto sabés sobre el territorio argentino",
+        "reward": 140,
+        "question": "¿En qué región se encuentra la selva misionera?",
+        "options": [
+            "NOA",
+            "NEA",
+            "Cuyo",
+            "Pampa"
+        ],
+        "correctOptionIndex": 1,
+        "icon": "http://192.168.100.48:8000/faunaIcon1.png"
+    }
+]
