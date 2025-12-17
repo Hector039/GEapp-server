@@ -15,23 +15,23 @@ router.post(
 	isSessionOn(),
 	passportCall("login"),
 	handlePolicies(["PUBLIC"]),
-	usersController.userSigninOrLogin
+	usersController.userLogin
 );
 router.post(
 	"/signin",
 	isSessionOn(),
 	passportCall("signin"),
 	handlePolicies(["PUBLIC"]),
-	usersController.userSigninOrLogin
+	usersController.userSignin
 );
 router.get(
-	"/passrestoration/:email",
+	"/passrestoration/:email/:password",
 	isSessionOn(),
 	handlePolicies(["PUBLIC"]),
 	usersController.passRestoration
 );
-router.post(
-	"/forgot",
+router.get(
+	"/forgot/:uid/:password",
 	isSessionOn(),
 	handlePolicies(["PUBLIC"]),
 	usersController.userForgotPass
@@ -45,6 +45,12 @@ router.post(
 );
 router.put(
 	"/updateuserstatus/:uid",
+	userPassJwt(),
+	handlePolicies(["USER"]),
+	usersController.updateUserStatus
+);
+router.put(
+	"/reactivateuserstatus/:uid",
 	userPassJwt(),
 	handlePolicies(["PUBLIC"]),
 	usersController.updateUserStatus

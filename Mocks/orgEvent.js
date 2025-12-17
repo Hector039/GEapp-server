@@ -1,0 +1,11 @@
+const example = {
+	name: "Proyecto Don silvestre",
+	orgName: "Empresa X",
+	orgEmail: "empresax@empresax.com",
+	numEmployees: 100,
+	projectId: "68feca9b3930f3d9adf56f27",
+};
+
+const endpoint = {
+	endpoint: "POST: http://localhost:8000/api/orgevents/saveorgevent",
+};

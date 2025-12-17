@@ -43,8 +43,8 @@ export default class UsersRepository {
 	};
 
 	updateUserField = async (id, keyToUpdate, valueToUpdate) => {
-		if (keyToUpdate === "totalSteps") {
-			await this.usersModel.findByIdAndUpdate(id, {
+		if (keyToUpdate === "totalSteps" && typeof valueToUpdate === "number") {
+			return await this.usersModel.findByIdAndUpdate(id, {
 				$inc: { totalSteps: valueToUpdate },
 			});
 		}

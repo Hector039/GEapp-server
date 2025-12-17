@@ -5,7 +5,6 @@ import {
 import passport from "passport";
 import local from "passport-local";
 import { createHash, isValidPass } from "../tools/utils.js";
-//import mailer from "../tools/mailer.js";
 import moment from "moment";
 
 const localStrategy = local.Strategy;
@@ -19,6 +18,9 @@ const initializePassport = () => {
 				const { email } = req.body;
 
 				try {
+					//Consulta los eventos abiertos de la org ABIERTOS
+					//según el dominio del email del usuario
+					//si no encuentra nada, detiene el registro
 					const userOpenOrgEvent = await orgsEventsRepository.getUserOpenOrgEvent(
 						email
 					);
@@ -37,7 +39,6 @@ const initializePassport = () => {
 						orgEventId: userOpenOrgEvent[0]._id,
 					});
 
-					//await mailer({ mail: email, name: firstName }, `Bienvenido!`)
 					return done(null, newUser);
 				} catch (error) {
 					return done(error, null);
@@ -61,11 +62,11 @@ const initializePassport = () => {
 						return done(null, false, {
 							messages: "El evento o el proyecto está cerrado.",
 						});
-
+					/* 
 					if (user.status === false)
 						return done(null, false, {
-							messages: "Usuario no verificado. Revisa tu email y actívalo",
-						});
+							messages: "Usuario desactivado. Quieres reactivarlo?",
+						}); */
 					if (!isValidPass(password, user.password))
 						return done(null, false, {
 							messages: "Usuario o contraseña incorrecto.",

@@ -1,5 +1,4 @@
 import { generateToken, createHash, isValidPass } from "../tools/utils.js";
-//import mailer from "../tools/mailer.js";
 import CustomError from "../tools/customErrors/customError.js";
 import TErrors from "../tools/customErrors/enum.js";
 import {
@@ -8,13 +7,28 @@ import {
 	SESSION_REWARD,
 	STREAK_REWARD,
 } from "../constants/constants.js";
+import {
+	deactivateUserMailer,
+	passRestorationMailer,
+	welcomeMailer,
+} from "../tools/mailer.js";
 
 export default class UsersController {
 	constructor(repo) {
 		this.usersRepo = repo;
 	}
 
-	userSigninOrLogin = async (req, res, next) => {
+	userSignin = async (req, res, next) => {
+		const user = req.user;
+		if (user) {
+			await welcomeMailer(user);
+		}
+		res.status(200).json({
+			ok: true,
+		});
+	};
+
+	userLogin = async (req, res, next) => {
 		try {
 			const user = req.user;
 			const {
@@ -34,6 +48,7 @@ export default class UsersController {
 					avatar: userData.avatar,
 					totalSteps: userData.totalSteps,
 					registerDate: userData.registerDate,
+					status: userData.status,
 					token,
 					RECOMMENDED_DAILY_STEPS,
 					HOURS_TO_COUNT_STEPS,
@@ -106,7 +121,6 @@ export default class UsersController {
 				});
 			}
 			await this.usersRepo.updateUserField(uid, "email", newEmail);
-			await this.usersRepo.updateUserField(uid, "status", !user.status);
 			res.status(200).send();
 		} catch (error) {
 			next(error);
@@ -144,8 +158,15 @@ export default class UsersController {
 					statusCode: 404,
 				});
 			}
+			if (user.status) {
+				await deactivateUserMailer(user);
+			} else {
+				await welcomeMailer(user);
+			}
 			await this.usersRepo.updateUserField(uid, "status", !user.status);
-			res.status(200).send();
+			res.status(200).json({
+				ok: true,
+			});
 		} catch (error) {
 			next(error);
 		}
@@ -169,11 +190,7 @@ export default class UsersController {
 					statusCode: 404,
 				});
 			}
-			await this.usersRepo.updateUserField(
-				uid,
-				"totalSteps",
-				user.totalSteps + parseInt(steps)
-			);
+			await this.usersRepo.updateUserField(uid, "totalSteps", parseInt(steps));
 			res.status(200).send({ newTotalSteps: user.totalSteps + parseInt(steps) });
 		} catch (error) {
 			next(error);
@@ -181,7 +198,7 @@ export default class UsersController {
 	};
 
 	passRestoration = async (req, res, next) => {
-		const { email } = req.params;
+		const { email, password } = req.params;
 		try {
 			const user = await this.usersRepo.getUser(email);
 			if (user === null) {
@@ -191,18 +208,19 @@ export default class UsersController {
 					statusCode: 404,
 				});
 			}
-			//await mailer({ mail: email, name: user.firstName },
-			//`Haz click en el enlace para restaurar tu contraseña: <a href="https://hector039.github.io/client55650/forgot/${email}">Restaurar</a>`)
-			res.status(200).send(`Se envió la solicitud de restauración a ${email}`);
+			await passRestorationMailer(user, createHash(password));
+			res.status(200).json({
+				ok: true,
+			});
 		} catch (error) {
 			next(error);
 		}
 	};
 
 	userForgotPass = async (req, res, next) => {
-		const { email, password } = req.body;
+		const { uid, password } = req.params;
 		try {
-			const user = await this.usersRepo.getUser(email);
+			const user = await this.usersRepo.getUser(uid);
 			if (user === null) {
 				CustomError.createError({
 					message: "Usuario no encontrado.",
@@ -210,29 +228,7 @@ export default class UsersController {
 					statusCode: 404,
 				});
 			}
-			if (password.length > 8 || password.length < 6) {
-				CustomError.createError({
-					message: "Recuerda, entre 6 y 8 caracteres",
-					code: TErrors.INVALID_TYPES,
-					statusCode: 400,
-				});
-			}
-			if (isValidPass(password, user.password)) {
-				CustomError.createError({
-					message: "La contraseña debe ser diferente a la anterior.",
-					code: TErrors.INVALID_TYPES,
-					statusCode: 400,
-				});
-			}
-			await this.usersRepo.updateUserField(
-				user._id,
-				"password",
-				createHash(password)
-			);
-			await mailer(
-				{ mail: email, name: user.firstName },
-				"Se cambió tu contraseña."
-			);
+			await this.usersRepo.updateUserField(user._id, "password", password);
 			res.status(200).send("Se cambió la contraseña correctamente.");
 		} catch (error) {
 			next(error);
