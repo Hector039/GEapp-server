@@ -21,9 +21,8 @@ const initializePassport = () => {
 					//Consulta los eventos abiertos de la org ABIERTOS
 					//según el dominio del email del usuario
 					//si no encuentra nada, detiene el registro
-					const userOpenOrgEvent = await orgsEventsRepository.getUserOpenOrgEvent(
-						email
-					);
+					const userOpenOrgEvent =
+						await orgsEventsRepository.getUserOpenOrgEvent(email);
 					if (userOpenOrgEvent.length === 0) {
 						return done(null, false, {
 							messages: "No se encontró ningún evento abierto de la Organización.",
@@ -43,8 +42,8 @@ const initializePassport = () => {
 				} catch (error) {
 					return done(error, null);
 				}
-			}
-		)
+			},
+		),
 	);
 
 	passport.use(
@@ -58,7 +57,12 @@ const initializePassport = () => {
 					if (user === null)
 						return done(null, false, { messages: "El Usuario no existe." });
 
-					if (!user.orgEventId.projectId || !user.orgEventId)
+					if (
+						!user.orgEventId.projectId ||
+						!user.orgEventId.projectId.isOpen ||
+						!user.orgEventId.isOpen ||
+						!user.orgEventId
+					)
 						return done(null, false, {
 							messages: "El evento o el proyecto está cerrado.",
 						});
@@ -77,8 +81,8 @@ const initializePassport = () => {
 				} catch (error) {
 					return done(error, null);
 				}
-			}
-		)
+			},
+		),
 	);
 
 	passport.serializeUser((user, done) => {
