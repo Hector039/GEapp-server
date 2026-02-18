@@ -22,7 +22,8 @@ export default class OrgsEventRepository {
 		await this.orgEventModel.findByIdAndUpdate(eid, {
 			$inc: { steps: newSteps },
 		});
-		return;
+		let orgOpenEvents = await this.getOrgEventTotalSteps(eid);
+		return orgOpenEvents;
 	};
 
 	saveOrgEvent = async (newEvent) => {

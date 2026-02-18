@@ -19,8 +19,8 @@ export default class OrgEventsController {
 	updateOrgEventSteps = async (req, res, next) => {
 		const { eid, steps } = req.body;
 		try {
-			await this.orgEventsRepo.updateOrgEventSteps(eid, steps);
-			res.status(200).send();
+			const result = await this.orgEventsRepo.updateOrgEventSteps(eid, steps);
+			res.status(200).send(result);
 		} catch (error) {
 			next(error);
 		}

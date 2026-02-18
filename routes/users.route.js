@@ -15,88 +15,69 @@ router.post(
 	isSessionOn(),
 	passportCall("login"),
 	handlePolicies(["PUBLIC"]),
-	usersController.userLogin
+	usersController.userLogin,
 );
 router.post(
 	"/signin",
 	isSessionOn(),
 	passportCall("signin"),
 	handlePolicies(["PUBLIC"]),
-	usersController.userSignin
+	usersController.userSignin,
 );
 router.get(
 	"/passrestoration/:email/:password",
 	isSessionOn(),
 	handlePolicies(["PUBLIC"]),
-	usersController.passRestoration
+	usersController.passRestoration,
 );
 router.get(
 	"/forgot/:uid/:password",
 	isSessionOn(),
 	handlePolicies(["PUBLIC"]),
-	usersController.userForgotPass
+	usersController.userForgotPass,
 );
 router.post(
 	"/changeavatar/:uid",
 	userPassJwt(),
 	handlePolicies(["USER"]),
 	uploads.single("avatar"),
-	usersController.updateUserAvatar
+	usersController.updateUserAvatar,
 );
 router.put(
 	"/updateuserstatus/:uid",
 	userPassJwt(),
 	handlePolicies(["USER"]),
-	usersController.updateUserStatus
+	usersController.updateUserStatus,
 );
 router.put(
 	"/reactivateuserstatus/:uid",
 	userPassJwt(),
 	handlePolicies(["PUBLIC"]),
-	usersController.updateUserStatus
+	usersController.updateUserStatus,
 );
 router.put(
 	"/changeemail",
 	userPassJwt(),
 	handlePolicies(["USER"]),
-	usersController.updateUserEmail
+	usersController.updateUserEmail,
 );
 router.put(
 	"/changepassword",
 	userPassJwt(),
 	handlePolicies(["USER"]),
-	usersController.updateUserPassword
+	usersController.updateUserPassword,
 );
 router.put(
 	"/updateusertotalsteps",
 	userPassJwt(),
 	handlePolicies(["USER"]),
-	usersController.updateUserTotalSteps
+	usersController.updateUserTotalSteps,
 );
-router.get(
-	"/getnewuserscommunity",
-	handlePolicies(["PUBLIC"]),
-	usersController.getNewUsersCommunity
-);
+
 router.get(
 	"/getusertotalsteps/:uid",
 	handlePolicies(["USER"]),
-	usersController.getUserTotalSteps
-);
-router.get(
-	"/gettopusers",
-	handlePolicies(["PUBLIC"]),
-	usersController.getTopUsers
-);
-router.get(
-	"/getcommunitysteps",
-	handlePolicies(["PUBLIC"]),
-	usersController.getCommunitySteps
-);
-router.get(
-	"/getorgusers/:uid",
-	handlePolicies(["USER"]),
-	usersController.getOrgUsers
+	usersController.getUserTotalSteps,
 );
 
 export default router;

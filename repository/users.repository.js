@@ -53,12 +53,4 @@ export default class UsersRepository {
 		await this.usersModel.findByIdAndUpdate({ _id: id }, obj);
 		return;
 	};
-
-	getOrgUsers = async (org) => {
-		let orgUsers = await this.usersModel
-			.find({ org: org }, { email: 1, avatar: 1, _id: 1, totalSteps: 1 })
-			.sort({ totalSteps: -1 })
-			.limit(5);
-		return orgUsers;
-	};
 }

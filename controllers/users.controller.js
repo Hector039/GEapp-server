@@ -93,7 +93,7 @@ export default class UsersController {
 			await this.usersRepo.updateUserField(
 				uid,
 				"password",
-				createHash(newPassword)
+				createHash(newPassword),
 			);
 			res.status(200).send();
 		} catch (error) {
@@ -235,22 +235,6 @@ export default class UsersController {
 		}
 	};
 
-	getNewUsersCommunity = async (req, res, next) => {
-		try {
-			const newCommunityUsers = await this.usersRepo.getNewUsersCommunity();
-			if (!newCommunityUsers) {
-				CustomError.createError({
-					message: "Error recibiendo los usuarios, intenta de nuevo.",
-					code: TErrors.NOT_FOUND,
-					statusCode: 404,
-				});
-			}
-			res.status(200).send(newCommunityUsers);
-		} catch (error) {
-			next(error);
-		}
-	};
-
 	getUserTotalSteps = async (req, res, next) => {
 		const { uid } = req.params;
 		try {
@@ -263,70 +247,6 @@ export default class UsersController {
 				});
 			}
 			res.status(200).send({ totalSteps: user.totalSteps });
-		} catch (error) {
-			next(error);
-		}
-	};
-
-	getTopUsers = async (req, res, next) => {
-		try {
-			const topUsers = await this.usersRepo.getTopUsers();
-			if (!topUsers) {
-				CustomError.createError({
-					message: "Error recibiendo los usuarios destacados, intenta de nuevo.",
-					code: TErrors.DATABASE,
-					statusCode: 500,
-				});
-			}
-			res.status(200).send(topUsers);
-		} catch (error) {
-			next(error);
-		}
-	};
-
-	getCommunitySteps = async (req, res, next) => {
-		try {
-			const communitySteps = await this.usersRepo.getCommunitySteps();
-			if (!communitySteps) {
-				CustomError.createError({
-					message: "Error recibiendo los pasos de la comunidad, intenta de nuevo.",
-					code: TErrors.DATABASE,
-					statusCode: 500,
-				});
-			}
-			res.status(200).send({ communitySteps });
-		} catch (error) {
-			next(error);
-		}
-	};
-
-	getOrgUsers = async (req, res, next) => {
-		const { uid } = req.params;
-		try {
-			const user = await this.usersRepo.getUser(uid);
-			if (user === null) {
-				CustomError.createError({
-					message: `Usuario con ID ${uid} no encontrado`,
-					code: TErrors.INVALID_TYPES,
-					statusCode: 404,
-				});
-			}
-			if (user.org === null || !user.org) {
-				CustomError.createError({
-					message: `El usuario no pertenece a ninguna organización.`,
-					code: TErrors.INVALID_TYPES,
-					statusCode: 400,
-				});
-			}
-			const orgUsers = await this.usersRepo.getOrgUsers(user.org);
-			if (!orgUsers) {
-				CustomError.createError({
-					message: `No se pudieron obtener los usuarios de la organización.`,
-					code: TErrors.INVALID_TYPES,
-					statusCode: 400,
-				});
-			}
-			res.status(200).send(orgUsers);
 		} catch (error) {
 			next(error);
 		}
