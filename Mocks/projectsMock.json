@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Reserva Don Silvestre",
+        "location": "Misiones, Argentina",
+        "descr": "Reforestación en el corredor de nativas",
+        "treeGoal": 1000,
+        "startDate": "2026-02-18T19:00:38.000Z",
+        "isOpen": true
+    }
+]

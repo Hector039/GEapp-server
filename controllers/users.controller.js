@@ -95,7 +95,9 @@ export default class UsersController {
 				"password",
 				createHash(newPassword),
 			);
-			res.status(200).send();
+			res.status(200).json({
+				ok: true,
+			});
 		} catch (error) {
 			next(error);
 		}
@@ -121,7 +123,9 @@ export default class UsersController {
 				});
 			}
 			await this.usersRepo.updateUserField(uid, "email", newEmail);
-			res.status(200).send();
+			res.status(200).json({
+				ok: true,
+			});
 		} catch (error) {
 			next(error);
 		}

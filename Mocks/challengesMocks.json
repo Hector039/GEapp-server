@@ -11,7 +11,7 @@
             "Lavanda"
         ],
         "correctOptionIndex": 0,
-        "icon": "http://192.168.100.48:8000/floraIcon1.png"
+        "icon": "https://geapp-server.onrender.com/floraIcon1.png"
     },
     {
         "title": "Plantas Nativas",
@@ -25,7 +25,7 @@
             "Delta del Paraná"
         ],
         "correctOptionIndex": 2,
-        "icon": "http://192.168.100.48:8000/floraIcon2.png"
+        "icon": "https://geapp-server.onrender.com/floraIcon2.png"
     },
     {
         "title": "Flora Argentina",
@@ -39,7 +39,7 @@
             "La orquídea"
         ],
         "correctOptionIndex": 0,
-        "icon": "http://192.168.100.48:8000/floraIcon3.png"
+        "icon": "https://geapp-server.onrender.com/floraIcon3.png"
     },
     {
         "title": "Ecosistemas",
@@ -53,7 +53,7 @@
             "Bosques tropicales densos"
         ],
         "correctOptionIndex": 2,
-        "icon": "http://192.168.100.48:8000/floraIcon3.png"
+        "icon": "https://geapp-server.onrender.com/floraIcon3.png"
     },
     {
         "title": "Plantas Nativas",
@@ -67,7 +67,7 @@
             "Pasto bermuda"
         ],
         "correctOptionIndex": 3,
-        "icon": "http://192.168.100.48:8000/floraIcon2.png"
+        "icon": "https://geapp-server.onrender.com/floraIcon2.png"
     },
     {
         "title": "Educación Ambiental",
@@ -81,7 +81,7 @@
             "Urbanización extensiva"
         ],
         "correctOptionIndex": 0,
-        "icon": "http://192.168.100.48:8000/floraIcon1.png"
+        "icon": "https://geapp-server.onrender.com/floraIcon1.png"
     },
     {
         "title": "Plantas Nativas",
@@ -95,7 +95,7 @@
             "Algarrobo"
         ],
         "correctOptionIndex": 1,
-        "icon": "http://192.168.100.48:8000/floraIcon3.png"
+        "icon": "https://geapp-server.onrender.com/floraIcon3.png"
     },
     {
         "title": "Ecosistemas",
@@ -109,7 +109,7 @@
             "Pampa"
         ],
         "correctOptionIndex": 2,
-        "icon": "http://192.168.100.48:8000/faunaIcon3.png"
+        "icon": "https://geapp-server.onrender.com/faunaIcon3.png"
     },
     {
         "title": "Flora Argentina",
@@ -123,7 +123,7 @@
             "Olmo"
         ],
         "correctOptionIndex": 0,
-        "icon": "http://192.168.100.48:8000/faunaIcon2.png"
+        "icon": "https://geapp-server.onrender.com/faunaIcon2.png"
     },
     {
         "title": "Plantas y Polinizadores",
@@ -137,7 +137,7 @@
             "Cardón"
         ],
         "correctOptionIndex": 1,
-        "icon": "http://192.168.100.48:8000/faunaIcon1.png"
+        "icon": "https://geapp-server.onrender.com/faunaIcon1.png"
     },
     {
         "title": "Educación Ambiental",
@@ -151,7 +151,7 @@
             "Eliminación de arbustos"
         ],
         "correctOptionIndex": 0,
-        "icon": "http://192.168.100.48:8000/faunaIcon4.png"
+        "icon": "https://geapp-server.onrender.com/faunaIcon4.png"
     },
     {
         "title": "Ecosistemas",
@@ -165,6 +165,6 @@
             "Pampa"
         ],
         "correctOptionIndex": 1,
-        "icon": "http://192.168.100.48:8000/faunaIcon1.png"
+        "icon": "https://geapp-server.onrender.com/faunaIcon1.png"
     }
 ]
