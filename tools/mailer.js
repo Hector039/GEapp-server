@@ -9,8 +9,8 @@ function editWord(html, originalWord, newWord) {
 
 const transport = nodemailer.createTransport({
 	host: "smtp.hostinger.com",
-	port: 587,
-	secure: false,
+	port: 465,
+	secure: true,
 	auth: {
 		user: process.env.MAILER_USER,
 		pass: process.env.MAILER_PASSWORD,
@@ -20,12 +20,12 @@ const transport = nodemailer.createTransport({
 export async function welcomeWithActivationMailer(user) {
 	let htmlTemplate = fs.readFileSync(
 		"src/tools/templates/email-welcome-activation-template.html",
-		"utf8"
+		"utf8",
 	);
 	const htmlTemplateEdited = editWord(
 		htmlTemplate,
 		"pathToValidation",
-		`http://localhost:5000/api/users/activateuser/${user._id}`
+		`http://localhost:5000/api/users/activateuser/${user._id}`,
 	);
 	try {
 		await transport.verify();
@@ -50,7 +50,7 @@ export async function welcomeWithActivationMailer(user) {
 export async function welcomeMailer(user) {
 	let htmlTemplate = fs.readFileSync(
 		`${__dirname}/templates/email-welcome-template.html`,
-		"utf8"
+		"utf8",
 	);
 	try {
 		await transport.verify();
@@ -75,12 +75,12 @@ export async function welcomeMailer(user) {
 export async function passRestorationMailer(user, password) {
 	let htmlTemplate = fs.readFileSync(
 		`${__dirname}/templates/email-passrestoration-template.html`,
-		"utf8"
+		"utf8",
 	);
 	const htmlTemplateEdited = editWord(
 		htmlTemplate,
 		"pathToValidation",
-		`http://${process.env.BACKEND_URL}:${process.env.PORT}/api/users/forgot/${user._id}/${password}`
+		`http://${process.env.BACKEND_URL}:${process.env.PORT}/api/users/forgot/${user._id}/${password}`,
 	);
 	try {
 		await transport.verify();
@@ -105,7 +105,7 @@ export async function passRestorationMailer(user, password) {
 export async function deactivateUserMailer(user) {
 	let htmlTemplate = fs.readFileSync(
 		`${__dirname}/templates/email-deactivate-user-template.html`,
-		"utf8"
+		"utf8",
 	);
 	//const htmlTemplateEdited = editWord(htmlTemplate, 'pathToValidation', `http://localhost:5000/users/passrestoration/${user._id}/${password}`)
 	try {
