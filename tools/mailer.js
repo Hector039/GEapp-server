@@ -9,12 +9,16 @@ function editWord(html, originalWord, newWord) {
 
 const transport = nodemailer.createTransport({
 	host: "smtp.hostinger.com",
-	port: 465,
-	secure: true,
+	port: 587,
+	secure: false,
 	auth: {
 		user: process.env.MAILER_USER,
 		pass: process.env.MAILER_PASSWORD,
 	},
+	// Tiempos de espera para evitar que el proceso se cuelgue infinitamente
+	connectionTimeout: 10000, // 10 seg para conectar
+	greetingTimeout: 5000, // 5 seg para el saludo SMTP
+	socketTimeout: 15000, // 15 seg de inactividad
 });
 
 export async function welcomeWithActivationMailer(user) {

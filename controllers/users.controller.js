@@ -19,10 +19,10 @@ export default class UsersController {
 	}
 
 	userSignin = async (req, res, next) => {
-		const user = req.user;
+		/* const user = req.user;
 		if (user) {
 			await welcomeMailer(user);
-		}
+		} */
 		res.status(200).json({
 			ok: true,
 		});
@@ -162,11 +162,11 @@ export default class UsersController {
 					statusCode: 404,
 				});
 			}
-			if (user.status) {
+			/* if (user.status) {
 				await deactivateUserMailer(user);
 			} else {
 				await welcomeMailer(user);
-			}
+			} */
 			await this.usersRepo.updateUserField(uid, "status", !user.status);
 			res.status(200).json({
 				ok: true,
@@ -212,7 +212,7 @@ export default class UsersController {
 					statusCode: 404,
 				});
 			}
-			await passRestorationMailer(user, createHash(password));
+			//await passRestorationMailer(user, createHash(password));
 			res.status(200).json({
 				ok: true,
 			});
