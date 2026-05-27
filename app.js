@@ -64,7 +64,7 @@ async function startServer() {
 	});
 
 	try {
-		await mongoose.connect(process.env.DB_URL_LOCAL);
+		await mongoose.connect(process.env.DB_URL);
 		console.log("Mongo conectado");
 	} catch (error) {
 		throw new Error("Error connecting to Mongo DB", error);
