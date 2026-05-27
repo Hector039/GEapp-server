@@ -6,6 +6,7 @@ import { isSessionOn } from "../middlewares/isSessionOn.js";
 import { userPassJwt } from "../middlewares/userPassJwt.js";
 import { uploads } from "../middlewares/multer.js";
 import { passportCall } from "../middlewares/passportCall.js";
+import { resizeAvatar } from "../middlewares/sharpMiddleware.js";
 
 const usersController = new UsersController(usersRepository);
 const router = Router();
@@ -25,35 +26,36 @@ router.post(
 	usersController.userSignin,
 );
 router.get(
-	"/passrestoration/:email/:password",
+	"/sendrestorationemail/:email",
 	isSessionOn(),
 	handlePolicies(["PUBLIC"]),
-	usersController.passRestoration,
-);
-router.get(
-	"/forgot/:uid/:password",
-	isSessionOn(),
-	handlePolicies(["PUBLIC"]),
-	usersController.userForgotPass,
+	usersController.sendRestorationEmail,
 );
 router.post(
-	"/changeavatar/:uid",
+	"/passrestoration",
+	isSessionOn(),
+	handlePolicies(["PUBLIC"]),
+	usersController.restorePass,
+);
+router.post(
+	"/changeavatar",
 	userPassJwt(),
 	handlePolicies(["USER"]),
 	uploads.single("avatar"),
+	resizeAvatar,
 	usersController.updateUserAvatar,
 );
 router.put(
-	"/updateuserstatus/:uid",
+	"/updateuserstatus",
 	userPassJwt(),
 	handlePolicies(["USER"]),
 	usersController.updateUserStatus,
 );
 router.put(
-	"/reactivateuserstatus/:uid",
+	"/reactivateuserstatus",
 	userPassJwt(),
-	handlePolicies(["PUBLIC"]),
-	usersController.updateUserStatus,
+	handlePolicies(["USER"]),
+	usersController.reactivateUserStatus,
 );
 router.put(
 	"/changeemail",
@@ -75,9 +77,31 @@ router.put(
 );
 
 router.get(
-	"/getusertotalsteps/:uid",
+	"/getusertotalsteps",
+	userPassJwt(),
 	handlePolicies(["USER"]),
 	usersController.getUserTotalSteps,
+);
+
+router.get(
+	"/getuserstreak",
+	userPassJwt(),
+	handlePolicies(["USER"]),
+	usersController.getUserStreak,
+);
+
+router.put(
+	"/updateuserstreak",
+	userPassJwt(),
+	handlePolicies(["USER"]),
+	usersController.updateUserStreak,
+);
+
+router.put(
+	"/markonboardingseen",
+	userPassJwt(),
+	handlePolicies(["USER"]),
+	usersController.markHasSeenOnboarding,
 );
 
 export default router;

@@ -7,9 +7,8 @@ export default class ChallengesController {
 	}
 
 	getAllChallenges = async (req, res, next) => {
-		const { uid } = req.params;
 		try {
-			const allChallenges = await this.challengesRepo.getAllChallenges(uid);
+			const allChallenges = await this.challengesRepo.getAllChallenges(req.user);
 			res.status(200).send(allChallenges);
 		} catch (error) {
 			next(error);
@@ -17,9 +16,8 @@ export default class ChallengesController {
 	};
 
 	getRandomChallenge = async (req, res, next) => {
-		const { uid } = req.params;
 		try {
-			const lastChallenge = await this.challengesRepo.getRandomChallenge(uid);
+			const lastChallenge = await this.challengesRepo.getRandomChallenge(req.user);
 			res.status(200).send(lastChallenge);
 		} catch (error) {
 			next(error);

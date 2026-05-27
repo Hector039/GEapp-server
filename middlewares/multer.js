@@ -1,31 +1,33 @@
 import multer from "multer";
-
-const storageUploads = multer.diskStorage({
-	destination: function (req, file, cb) {
-		const dirProfile = `public/data`;
-		if (file.fieldname === "avatar") return cb(null, dirProfile);
-	},
-	filename: function (req, file, cb) {
-		const date = new Date().getTime();
-		const fileName = file.originalname.slice(-5);
-		cb(null, req.user.id + "_" + date + "_" + fileName);
-	},
-});
+import path from "path";
 
 const fileExtFilter = function (req, file, cb) {
-	try {
-		const ext = file.mimetype.slice(-4);
-		if (file && file.fieldname === "avatar" && ext !== "/jpg" && ext !== "jpeg") {
-			cb(new Error("Imagen no reconocida. Solo jpg, jpeg son permitidos"), null);
-			return;
+	const allowedMimeTypes = ["image/jpeg", "image/jpg", "image/png"];
+	const allowedExtensions = [".jpg", ".jpeg", ".png"];
+
+	if (file.fieldname === "avatar") {
+		const fileExt = path.extname(file.originalname).toLowerCase();
+		const mimeType = file.mimetype.toLowerCase();
+
+		if (
+			!allowedMimeTypes.includes(mimeType) ||
+			!allowedExtensions.includes(fileExt)
+		) {
+			return cb(
+				new Error("Formato inválido. Solo se permiten .jpg, .jpeg o .png"),
+				false,
+			);
 		}
-		cb(null, true);
-	} catch (error) {
-		cb(error, null);
 	}
+	cb(null, true);
 };
 
+// Configuramos Multer para guardar temporalmente en MEMORIA
 export const uploads = multer({
+	storage: multer.memoryStorage(),
 	fileFilter: fileExtFilter,
-	storage: storageUploads,
+	limits: {
+		fileSize: 2 * 1024 * 1024, // Límite estricto de 2 MB
+		files: 1,
+	},
 });

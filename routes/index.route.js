@@ -6,6 +6,7 @@ import challengesRouter from "./challenges.route.js";
 import userChallengesRouter from "./userChallenges.route.js";
 import orgEventsRouter from "./orgEvents.route.js";
 import refProjectsRouter from "./refProjects.route.js";
+import appVersionRouter from "./appVersion.route.js";
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use("/api/challenges", challengesRouter);
 router.use("/api/userchallenges", userChallengesRouter);
 router.use("/api/orgevents", orgEventsRouter);
 router.use("/api/refprojects", refProjectsRouter);
+router.use("/api/app-version", appVersionRouter);
 
 export default router;

@@ -7,11 +7,13 @@ export const passportCall = (strategy) => {
 		passport.authenticate(strategy, (error, user, info) => {
 			if (error) return next(error);
 			if (!user) {
-				CustomError.createError({
-					message: info.messages ? info.messages : info.toString(),
-					code: TErrors.INVALID_TYPES,
-					statusCode: 400,
-				});
+				return next(
+					new CustomError(
+						info?.messages || info?.toString() || "Auth fallida",
+						TErrors.INVALID_TYPES,
+						400,
+					),
+				);
 			}
 			req.user = user;
 			next();

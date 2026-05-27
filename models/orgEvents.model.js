@@ -15,6 +15,13 @@ const orgEventSchema = new mongoose.Schema({
 	},
 	startDate: { type: Date, default: Date.now },
 	isOpen: { type: Boolean, default: true },
+	invitationCode: {
+		type: String,
+		maxlength: [6, "6 dígitos máximo"],
+		minlength: [6, "6 dígitos mínimo"],
+		required: true,
+		unique: true,
+	},
 });
 
 const orgEventModel = mongoose.model(orgEventCollection, orgEventSchema);

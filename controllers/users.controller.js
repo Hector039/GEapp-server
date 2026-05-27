@@ -49,7 +49,10 @@ export default class UsersController {
 					totalSteps: userData.totalSteps,
 					registerDate: userData.registerDate,
 					status: userData.status,
+					streak: userData.streak,
 					token,
+					lastCheckReward: userData.lastCheckReward,
+					hasSeenOnBoarding: userData.hasSeenOnBoarding,
 					RECOMMENDED_DAILY_STEPS,
 					HOURS_TO_COUNT_STEPS,
 					SESSION_REWARD,
@@ -64,12 +67,12 @@ export default class UsersController {
 	};
 
 	updateUserPassword = async (req, res, next) => {
-		const { uid, oldPassword, newPassword } = req.body;
+		const { oldPassword, newPassword } = req.body;
 		try {
-			const user = await this.usersRepo.getUser(uid);
+			const user = await this.usersRepo.getUserWithPassword(req.user);
 			if (!user) {
 				CustomError.createError({
-					message: `Usuario con ID ${uid} no encontrado.`,
+					message: `Usuario no encontrado.`,
 					code: TErrors.NOT_FOUND,
 					statusCode: 404,
 				});
@@ -91,7 +94,7 @@ export default class UsersController {
 				});
 			}
 			await this.usersRepo.updateUserField(
-				uid,
+				req.user,
 				"password",
 				createHash(newPassword),
 			);
@@ -104,12 +107,12 @@ export default class UsersController {
 	};
 
 	updateUserEmail = async (req, res, next) => {
-		const { uid, newEmail } = req.body;
+		const { newEmail } = req.body;
 		try {
-			const user = await this.usersRepo.getUser(uid);
+			const user = await this.usersRepo.getUser(req.user);
 			if (!user) {
 				CustomError.createError({
-					message: `Usuario ID ${uid} no encontrado`,
+					message: `Usuario no encontrado`,
 					code: TErrors.NOT_FOUND,
 					statusCode: 404,
 				});
@@ -122,7 +125,7 @@ export default class UsersController {
 					statusCode: 409,
 				});
 			}
-			await this.usersRepo.updateUserField(uid, "email", newEmail);
+			await this.usersRepo.updateUserField(req.user, "email", newEmail);
 			res.status(200).json({
 				ok: true,
 			});
@@ -132,9 +135,7 @@ export default class UsersController {
 	};
 
 	updateUserAvatar = async (req, res, next) => {
-		const { uid } = req.params;
 		const avatar = req.file;
-
 		try {
 			if (!avatar) {
 				CustomError.createError({
@@ -144,7 +145,7 @@ export default class UsersController {
 				});
 			}
 			const avatarPath = `http://${process.env.LOCAL_IP}:${process.env.PORT}/${avatar.filename}`;
-			await this.usersRepo.updateUserField(uid, "avatar", avatarPath);
+			await this.usersRepo.updateUserField(req.user, "avatar", avatarPath);
 			res.status(200).send(avatarPath);
 		} catch (error) {
 			next(error);
@@ -152,12 +153,11 @@ export default class UsersController {
 	};
 
 	updateUserStatus = async (req, res, next) => {
-		const { uid } = req.params;
 		try {
-			const user = await this.usersRepo.getUser(uid);
+			const user = await this.usersRepo.getUser(req.user);
 			if (!user) {
 				CustomError.createError({
-					message: `Usuario ID ${uid} no encontrado`,
+					message: `Usuario no encontrado`,
 					code: TErrors.NOT_FOUND,
 					statusCode: 404,
 				});
@@ -167,7 +167,27 @@ export default class UsersController {
 			} else {
 				await welcomeMailer(user);
 			} */
-			await this.usersRepo.updateUserField(uid, "status", !user.status);
+			await this.usersRepo.updateUserField(req.user, "status", !user.status);
+			res.status(200).json({
+				ok: true,
+			});
+		} catch (error) {
+			next(error);
+		}
+	};
+
+	reactivateUserStatus = async (req, res, next) => {
+		try {
+			const user = await this.usersRepo.getUser(req.user);
+			if (!user) {
+				CustomError.createError({
+					message: `Usuario email no encontrado`,
+					code: TErrors.NOT_FOUND,
+					statusCode: 404,
+				});
+			}
+
+			await this.usersRepo.updateUserField(req.user, "status", !user.status);
 			res.status(200).json({
 				ok: true,
 			});
@@ -177,32 +197,42 @@ export default class UsersController {
 	};
 
 	updateUserTotalSteps = async (req, res, next) => {
-		const { uid, steps } = req.body;
+		const { steps } = req.body;
 		try {
-			if (!uid || !steps) {
+			if (!steps) {
 				CustomError.createError({
 					message: `Faltan datos o están erróneos.`,
 					code: TErrors.INVALID_TYPES,
 					statusCode: 400,
 				});
 			}
-			const user = await this.usersRepo.getUser(uid);
+
+			const newSteps = Number(steps);
+			if (!Number.isInteger(newSteps) || newSteps < 0 || newSteps > 80000) {
+				CustomError.createError({
+					message: `Pasos inválidos.`,
+					code: TErrors.INVALID_TYPES,
+					statusCode: 400,
+				});
+			}
+
+			const user = await this.usersRepo.getUser(req.user);
 			if (!user) {
 				CustomError.createError({
-					message: `Usuario ID ${uid} no encontrado`,
+					message: `Usuario no encontrado`,
 					code: TErrors.NOT_FOUND,
 					statusCode: 404,
 				});
 			}
-			await this.usersRepo.updateUserField(uid, "totalSteps", parseInt(steps));
-			res.status(200).send({ newTotalSteps: user.totalSteps + parseInt(steps) });
+			await this.usersRepo.updateUserField(req.user, "totalSteps", newSteps);
+			res.status(200).send({ newTotalSteps: user.totalSteps + newSteps });
 		} catch (error) {
 			next(error);
 		}
 	};
 
-	passRestoration = async (req, res, next) => {
-		const { email, password } = req.params;
+	sendRestorationEmail = async (req, res, next) => {
+		const { email } = req.params;
 		try {
 			const user = await this.usersRepo.getUser(email);
 			if (user === null) {
@@ -212,7 +242,16 @@ export default class UsersController {
 					statusCode: 404,
 				});
 			}
-			//await passRestorationMailer(user, createHash(password));
+
+			const recoveryCode = Math.floor(100000 + Math.random() * 900000).toString();
+			const expires = new Date(Date.now() + 15 * 60 * 1000);
+
+			await this.usersRepo.updateUserField(user._id, "recovery", {
+				code: recoveryCode,
+				expires: expires,
+			});
+
+			await passRestorationMailer(user, recoveryCode);
 			res.status(200).json({
 				ok: true,
 			});
@@ -221,10 +260,17 @@ export default class UsersController {
 		}
 	};
 
-	userForgotPass = async (req, res, next) => {
-		const { uid, password } = req.params;
+	restorePass = async (req, res, next) => {
+		const { email, restorationCode, password } = req.body;
 		try {
-			const user = await this.usersRepo.getUser(uid);
+			if (!email || !restorationCode || !password) {
+				CustomError.createError({
+					message: "Faltan datos.",
+					code: TErrors.INVALID_TYPES,
+					statusCode: 400,
+				});
+			}
+			const user = await this.usersRepo.getUser(email);
 			if (user === null) {
 				CustomError.createError({
 					message: "Usuario no encontrado.",
@@ -232,25 +278,115 @@ export default class UsersController {
 					statusCode: 404,
 				});
 			}
-			await this.usersRepo.updateUserField(user._id, "password", password);
-			res.status(200).send("Se cambió la contraseña correctamente.");
+			if (
+				!user.recovery ||
+				!user.recovery.code ||
+				user.recovery.code !== restorationCode
+			) {
+				CustomError.createError({
+					message: "Código de verificación inválido.",
+					code: TErrors.INVALID_TYPES,
+					statusCode: 400,
+				});
+			}
+			if (new Date() > user.recovery.expires) {
+				CustomError.createError({
+					message: "El código ha expirado. Solicita uno nuevo.",
+					code: TErrors.INVALID_TYPES,
+					statusCode: 400,
+				});
+			}
+
+			const hashedPassword = createHash(password);
+			await this.usersRepo.updateUserField(user._id, "password", hashedPassword);
+
+			await this.usersRepo.updateUserField(user._id, "recovery", {
+				code: null,
+				expires: null,
+			});
+
+			res.status(200).json({
+				ok: true,
+			});
 		} catch (error) {
 			next(error);
 		}
 	};
 
 	getUserTotalSteps = async (req, res, next) => {
-		const { uid } = req.params;
 		try {
-			const user = await this.usersRepo.getUser(uid);
+			const user = await this.usersRepo.getUser(req.user);
 			if (user === null) {
 				CustomError.createError({
-					message: `Usuario con ID ${uid} no encontrado`,
+					message: `Usuario no encontrado`,
 					code: TErrors.INVALID_TYPES,
 					statusCode: 404,
 				});
 			}
 			res.status(200).send({ totalSteps: user.totalSteps });
+		} catch (error) {
+			next(error);
+		}
+	};
+
+	getUserStreak = async (req, res, next) => {
+		try {
+			const user = await this.usersRepo.getUser(req.user);
+			if (!user) {
+				CustomError.createError({
+					message: `Usuario no encontrado`,
+					code: TErrors.NOT_FOUND,
+					statusCode: 404,
+				});
+			}
+			const userStreak = await this.usersRepo.getUserStreak(req.user);
+			res.status(200).json(userStreak.streak);
+		} catch (error) {
+			next(error);
+		}
+	};
+
+	updateUserStreak = async (req, res, next) => {
+		const { newStreak } = req.body;
+		try {
+			const user = await this.usersRepo.getUser(req.user);
+			if (!user) {
+				CustomError.createError({
+					message: `Usuario no encontrado`,
+					code: TErrors.NOT_FOUND,
+					statusCode: 404,
+				});
+			}
+			await this.usersRepo.updateUserField(
+				req.user,
+				"streak",
+				parseInt(newStreak),
+			);
+			res.status(200).json({
+				ok: true,
+			});
+		} catch (error) {
+			next(error);
+		}
+	};
+
+	markHasSeenOnboarding = async (req, res, next) => {
+		try {
+			const user = await this.usersRepo.getUser(req.user);
+			if (!user) {
+				CustomError.createError({
+					message: `Usuario no encontrado`,
+					code: TErrors.NOT_FOUND,
+					statusCode: 404,
+				});
+			}
+
+			await this.usersRepo.updateUserField(
+				req.user,
+				"hasSeenOnBoarding",
+				!user.hasSeenOnBoarding,
+			);
+			res.status(200).json();
 		} catch (error) {
 			next(error);
 		}

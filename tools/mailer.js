@@ -76,21 +76,21 @@ export async function welcomeMailer(user) {
 	}
 }
 
-export async function passRestorationMailer(user, password) {
+export async function passRestorationMailer(user, recoveryCode) {
 	let htmlTemplate = fs.readFileSync(
 		`${__dirname}/templates/email-passrestoration-template.html`,
 		"utf8",
 	);
 	const htmlTemplateEdited = editWord(
 		htmlTemplate,
-		"pathToValidation",
-		`http://${process.env.BACKEND_URL}:${process.env.PORT}/api/users/forgot/${user._id}/${password}`,
+		"restorationCode",
+		recoveryCode,
 	);
 	try {
 		await transport.verify();
 		console.log("El servidor está listo para enviar mails");
 
-		if (!password || !user.email)
+		if (!recoveryCode || !user.email)
 			return "Error o falta de datos de usuario. No se envió el email.";
 
 		await transport.sendMail({

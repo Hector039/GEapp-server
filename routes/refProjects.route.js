@@ -2,34 +2,39 @@ import { Router } from "express";
 import RefProjectsController from "../controllers/refProjects.controller.js";
 import { reforestationProjectsRepository } from "../repository/index.repository.js";
 import { handlePolicies } from "../middlewares/handlePolicies.js";
+import { userPassJwt } from "../middlewares/userPassJwt.js";
 
 const refProjectsController = new RefProjectsController(
-	reforestationProjectsRepository
+	reforestationProjectsRepository,
 );
 const router = Router();
 
 router.get(
 	"/getrefproject/:pid",
+	userPassJwt(),
 	handlePolicies(["USER"]),
-	refProjectsController.getRefProject
+	refProjectsController.getRefProject,
 );
 
 router.get(
 	"/getallrefprojects",
+	userPassJwt(),
 	handlePolicies(["USER"]),
-	refProjectsController.getAllRefProjects
+	refProjectsController.getAllRefProjects,
 );
 
 router.post(
 	"/saverefproject",
-	handlePolicies(["USER"]),
-	refProjectsController.saveRefProject
+	userPassJwt(),
+	handlePolicies(["ADMIN"]),
+	refProjectsController.saveRefProject,
 );
 
 router.put(
 	"/updaterefproject",
-	handlePolicies(["USER"]),
-	refProjectsController.updateRefProject
+	userPassJwt(),
+	handlePolicies(["ADMIN"]),
+	refProjectsController.updateRefProject,
 );
 
 export default router;

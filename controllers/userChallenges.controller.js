@@ -7,11 +7,12 @@ export default class UserChallengesController {
 	}
 
 	saveUserChallenge = async (req, res, next) => {
-		const { uid, cid } = req.body;
+		const { cid } = req.body;
+		const uid = req.user;
 		try {
 			const isChallengeExists = await this.userChallengeRepo.isChallengeExists(
 				uid,
-				cid
+				cid,
 			);
 			if (isChallengeExists) {
 				CustomError.createError({
@@ -33,9 +34,10 @@ export default class UserChallengesController {
 	};
 
 	getDoneChallenges = async (req, res, next) => {
-		const { uid } = req.params;
 		try {
-			const doneChallenges = await this.userChallengeRepo.getDoneChallenges(uid);
+			const doneChallenges = await this.userChallengeRepo.getDoneChallenges(
+				req.user,
+			);
 			res.status(200).send(doneChallenges);
 		} catch (error) {
 			next(error);

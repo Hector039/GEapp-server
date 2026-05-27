@@ -5,7 +5,6 @@ import {
 import passport from "passport";
 import local from "passport-local";
 import { createHash, isValidPass } from "../tools/utils.js";
-import moment from "moment";
 
 const localStrategy = local.Strategy;
 
@@ -15,17 +14,14 @@ const initializePassport = () => {
 		new localStrategy(
 			{ passReqToCallback: true, usernameField: "email" },
 			async (req, username, password, done) => {
-				const { email } = req.body;
+				const { email, invitationCode } = req.body;
 
 				try {
-					//Consulta los eventos abiertos de la org ABIERTOS
-					//según el dominio del email del usuario
-					//si no encuentra nada, detiene el registro
 					const userOpenOrgEvent =
-						await orgsEventsRepository.getUserOpenOrgEvent(email);
+						await orgsEventsRepository.getUserOpenOrgEvent(invitationCode);
 					if (userOpenOrgEvent.length === 0) {
 						return done(null, false, {
-							messages: "No se encontró ningún evento abierto de la Organización.",
+							messages: "No se encontró ningún evento de tu Organización.",
 						});
 					}
 					const userByEmail = await usersRepository.getUser(email);
@@ -52,10 +48,13 @@ const initializePassport = () => {
 			{ usernameField: "email" },
 			async (email, password, done) => {
 				try {
-					const user = await usersRepository.getUser(email);
+					const user = await usersRepository.getUserWithPassword(email);
 
-					if (user === null)
-						return done(null, false, { messages: "El Usuario no existe." });
+					if (!user)
+						return done(null, false, { messages: "Credenciales inválidas." });
+
+					if (!isValidPass(password, user.password))
+						return done(null, false, { messages: "Credenciales inválidas." });
 
 					if (
 						!user.orgEventId.projectId ||
@@ -66,17 +65,8 @@ const initializePassport = () => {
 						return done(null, false, {
 							messages: "El evento o el proyecto está cerrado.",
 						});
-					/* 
-					if (user.status === false)
-						return done(null, false, {
-							messages: "Usuario desactivado. Quieres reactivarlo?",
-						}); */
-					if (!isValidPass(password, user.password))
-						return done(null, false, {
-							messages: "Usuario o contraseña incorrecto.",
-						});
 
-					await usersRepository.updateUserField(user._id, "lastLogin", moment());
+					await usersRepository.updateUserField(user._id, "lastLogin", new Date());
 					return done(null, user);
 				} catch (error) {
 					return done(error, null);
